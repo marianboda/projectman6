@@ -1,4 +1,5 @@
 const { graphql, buildSchema } = require('graphql')
+const db = require('./src/sqlite-service')
 
 const data = {
   projects: [
@@ -21,7 +22,8 @@ const data = {
 const schema = buildSchema(/* GraphQL */`
   type Query {
     projects: [Project],
-    tasks: [Task]
+    tasks: [Task],
+    taskStates: [TaskState]
   }
   type Schema {
     query: Query
@@ -30,10 +32,15 @@ const schema = buildSchema(/* GraphQL */`
     id: Int,
     name: String
   }
+  type TaskState {
+    id: Int,
+    name: String
+  }
   type Task {
     id: Int,
     name: String,
-    project: Project
+    project: Project,
+    state: TaskState
   }
 `)
 
@@ -44,19 +51,28 @@ const resolvers = {
     name: i.name,
     project: data.projects.filter(p => p.id === i.projectId)[0],
   })),
+  taskStates: () => db.getRecords('task_state'),
 }
 
-const query = `
-query myFirstQuery {
-  tasks {
+// const query = `
+// query myFirstQuery {
+//   tasks {
+//     id,
+//     project {
+//       id,
+//       name
+//     }
+//   }
+// }`
+
+const query2 = `
+query myQ {
+  taskStates {
     id,
-    project {
-      id,
-      name
-    }
+    name
   }
 }`
 
-graphql(schema, query, resolvers)
+graphql(schema, query2, resolvers)
   .then(result => console.log(JSON.stringify(result)))
   .catch(e => console.log(e))

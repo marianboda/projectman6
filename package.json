@@ -9,6 +9,7 @@
     "initdb": "sqlite3 db.sqlite < ./scripts/dbschema.sql"
   },
   "dependencies": {
+    "bluebird": "^3.4.7",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",

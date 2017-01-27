@@ -1,26 +1,11 @@
-const { graphql, buildSchema } = require('graphql')
+const express = require('express')
+const graphqlHTTP = require('express-graphql')
+const { buildSchema } = require('graphql')
 const db = require('./src/sqlite-service')
-
-const data = {
-  projects: [
-    { id: 1, name: 'Drogia' },
-    { id: 2, name: 'Projector' },
-    { id: 3, name: 'Sranda' },
-  ],
-  tasks: [
-    { id: 1, name: 'Task 1', projectId: 1 },
-    { id: 2, name: 'Task 2', projectId: 1 },
-    { id: 3, name: 'Task 3', projectId: 1 },
-    { id: 4, name: 'Task 4', projectId: 2 },
-    { id: 5, name: 'Task 5', projectId: 3 },
-    { id: 6, name: 'Task 6', projectId: 2 },
-    { id: 7, name: 'Task 7', projectId: 2 },
-    { id: 8, name: 'Task 8', projectId: 3 },
-  ],
-}
 
 const schema = buildSchema(/* GraphQL */`
   type Query {
+    project(id: Int): Project,
     projects: [Project],
     tasks: [Task],
     taskStates: [TaskState]
@@ -45,34 +30,28 @@ const schema = buildSchema(/* GraphQL */`
 `)
 
 const resolvers = {
-  projects: () => data.projects,
-  tasks: () => data.tasks.map(i => ({
-    id: i.id,
-    name: i.name,
-    project: data.projects.filter(p => p.id === i.projectId)[0],
-  })),
+  projects: () => db.getRecords('project'),
+  tasks: () => {
+    const tasks = db.getRecords('task')
+    console.log(tasks)
+    return tasks.map((i) => {
+      const pId = i.project_id
+      console.log(pId)
+      return Object.assign(i, { project: resolvers.project({ id: pId }) })
+    })
+  },
   taskStates: () => db.getRecords('task_state'),
+  project: (args) => {
+    console.log('pr', args)
+    return db.getRecordById('project', args.id)
+  },
 }
 
-// const query = `
-// query myFirstQuery {
-//   tasks {
-//     id,
-//     project {
-//       id,
-//       name
-//     }
-//   }
-// }`
+const app = express()
+app.use('/graphql', graphqlHTTP({
+  schema,
+  rootValue: resolvers,
+  graphiql: false,
+}))
 
-const query2 = `
-query myQ {
-  taskStates {
-    id,
-    name
-  }
-}`
-
-graphql(schema, query2, resolvers)
-  .then(result => console.log(JSON.stringify(result)))
-  .catch(e => console.log(e))
+app.listen(4000, () => console.log('GraphQL server running at port 4000'))

@@ -13,6 +13,8 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
+    "express": "^4.14.0",
+    "express-graphql": "^0.6.2",
     "graphql": "^0.8.2",
     "sqlite3": "^3.1.8"
   },

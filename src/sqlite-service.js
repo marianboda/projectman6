@@ -16,6 +16,15 @@ const db = {
     console.log(`SELECT * FROM ${table} WHERE id=${id + 0}`)
     return get(`SELECT * FROM ${table} WHERE id=${id + 0}`)
   },
+  saveRecord: (table, rec) => {
+    const keys = Object.keys(rec)
+    const values = keys.map(k => `"${rec[k]}"`)
+
+    const keysStr = `(${keys.join(',')})`
+    const valStr = `(${values.join(',')})`
+    return dbEngine.run(`INSERT INTO ${table} ${keysStr} VALUES ${valStr}`,
+      function dbRunCallback() { console.log(this.lastID) })
+  },
 }
 
 module.exports = db

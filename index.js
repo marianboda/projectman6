@@ -11,8 +11,14 @@ const schema = buildSchema(/* GraphQL */`
     taskStates: [TaskState]
   }
   type Schema {
-    query: Query
+    query: Query,
+    mutation: Mutation
   }
+
+  type Mutation {
+    setProject(name: String): Boolean
+  }
+
   type Project {
     id: Int,
     name: String
@@ -44,6 +50,12 @@ const resolvers = {
   project: (args) => {
     console.log('pr', args)
     return db.getRecordById('project', args.id)
+  },
+  setProject: ({ name }) => {
+    console.log('setting project', name)
+    db.saveRecord('project', { name })
+      .then(i => console.log(i))
+    return true
   },
 }
 

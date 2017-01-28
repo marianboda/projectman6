@@ -24,7 +24,7 @@ const schema = buildSchema(/* GraphQL */`
   type Task {
     id: Int,
     name: String,
-    project: Project,
+    project_id: Int,
     state: TaskState
   }
 `)

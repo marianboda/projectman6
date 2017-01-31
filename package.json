@@ -6,7 +6,8 @@
   "author": "Marian Boda <marianboda@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "initdb": "sqlite3 db.sqlite < ./scripts/dbschema.sql"
+    "initdb": "sqlite3 db.sqlite < ./scripts/dbschema.sql",
+    "start": "node index.js"
   },
   "dependencies": {
     "bluebird": "^3.4.7",

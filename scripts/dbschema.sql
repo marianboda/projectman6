@@ -7,7 +7,7 @@ CREATE TABLE "project"(
 CREATE TABLE "task"(
   "id" Integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" Text,
-  "project_id" Integer,
+  "project_id" Integer DEFAULT 0,
   "state_id" Integer DEFAULT 1,
   "priority" Real DEFAULT 50
 );

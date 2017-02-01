@@ -22,7 +22,14 @@ const db = {
 
     const keysStr = `(${keys.join(',')})`
     const valStr = `(${values.join(',')})`
-    return dbEngine.run(`INSERT INTO ${table} ${keysStr} VALUES ${valStr}`,
+
+    const q = (rec.id)
+      ? `UPDATE ${table} SET ${keysStr} = ${valStr} WHERE id=${rec.id}`
+      : `INSERT INTO ${table} ${keysStr} VALUES ${valStr}`
+
+    console.log(q)
+
+    return dbEngine.run(q,
       function dbRunCallback() { console.log(this.lastID) })
   },
 }

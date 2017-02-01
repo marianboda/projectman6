@@ -14,9 +14,9 @@ const schema = buildSchema(/* GraphQL */`
     query: Query,
     mutation: Mutation
   }
-
   type Mutation {
-    setProject(name: String): Boolean
+    setProject(name: String): Boolean,
+    setTask(task: TaskInput): Task
   }
 
   type Project {
@@ -32,6 +32,12 @@ const schema = buildSchema(/* GraphQL */`
     name: String,
     project_id: Int,
     state: TaskState
+  }
+  input TaskInput {
+    id: Int,
+    name: String,
+    project_id: Int,
+    state_id: Int
   }
 `)
 
@@ -56,6 +62,10 @@ const resolvers = {
     db.saveRecord('project', { name })
       .then(i => console.log(i))
     return true
+  },
+  setTask: ({ task }) => {
+    console.log('saving task', task)
+    return db.saveRecord('task', task)
   },
 }
 

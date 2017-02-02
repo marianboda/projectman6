@@ -70,6 +70,10 @@ const resolvers = {
 }
 
 const app = express()
+// app.use('/graphql', (req, res) => {
+//   console.log(req.body)
+//   res.send('a')
+// })
 app.use('/graphql', graphqlHTTP({
   schema,
   rootValue: resolvers,

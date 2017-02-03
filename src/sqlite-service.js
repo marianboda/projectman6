@@ -27,13 +27,19 @@ const db = {
       ? `UPDATE ${table} SET ${keysStr} = ${valStr} WHERE id=${rec.id}`
       : `INSERT INTO ${table} ${keysStr} VALUES ${valStr}`
 
+    console.log(q)
+
     const p = new Promise((res, rej) => {
       dbEngine.run(q,
         function dbRunCallback(err) {
           if (err) return rej(err)
-          return res({ id: this.lastID })
+          if (rec.id)
+            return res({ id: rec.id })
+          else
+            return res({ id: this.lastID })
         })
     }).then(r => db.getRecordById(table, r.id))
+    .catch(e => console.error(e))
     return p
   },
 }

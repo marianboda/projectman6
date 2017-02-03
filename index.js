@@ -31,7 +31,7 @@ const schema = buildSchema(/* GraphQL */`
     id: Int,
     name: String,
     project_id: Int,
-    state: TaskState
+    state_id: Int
   }
   input TaskInput {
     id: Int,

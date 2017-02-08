@@ -5,39 +5,41 @@ const db = require('./src/sqlite-service')
 
 const schema = buildSchema(/* GraphQL */`
   type Query {
-    project(id: Int): Project,
-    projects: [Project],
-    tasks: [Task],
+    project(id: Int): Project
+    projects: [Project]
+    tasks: [Task]
     taskStates: [TaskState]
   }
   type Schema {
-    query: Query,
+    query: Query
     mutation: Mutation
   }
   type Mutation {
-    setProject(name: String): Boolean,
+    setProject(name: String): Boolean
     setTask(task: TaskInput): Task
   }
 
   type Project {
-    id: Int,
+    id: Int
     name: String
   }
   type TaskState {
-    id: Int,
+    id: Int
     name: String
   }
   type Task {
-    id: Int,
-    name: String,
-    project_id: Int,
+    id: Int
+    name: String
+    project_id: Int
     state_id: Int
+    priority: Int
   }
   input TaskInput {
-    id: Int,
-    name: String,
-    project_id: Int,
+    id: Int
+    name: String
+    project_id: Int
     state_id: Int
+    priority: Int
   }
 `)
 
@@ -70,10 +72,6 @@ const resolvers = {
 }
 
 const app = express()
-// app.use('/graphql', (req, res) => {
-//   console.log(req.body)
-//   res.send('a')
-// })
 app.use('/graphql', graphqlHTTP({
   schema,
   rootValue: resolvers,

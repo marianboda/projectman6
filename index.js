@@ -31,7 +31,9 @@ const schema = buildSchema(/* GraphQL */`
     id: Int
     name: String
     project_id: Int
+    project: Project
     state_id: Int
+    state: TaskState
     priority: Int
   }
   input TaskInput {
@@ -49,12 +51,17 @@ const resolvers = {
     const tasks = db.getRecords('task')
     console.log(tasks)
     return tasks.map((i) => {
-      const pId = i.project_id
-      console.log(pId)
-      return Object.assign(i, { project: resolvers.project({ id: pId }) })
+      return Object.assign(i, {
+        project: resolvers.project({ id: i.project_id }),
+        state: resolvers.taskState({ id: i.state_id }),
+      })
     })
   },
   taskStates: () => db.getRecords('task_state'),
+  taskState: (args) => {
+    console.log('state', args)
+    return db.getRecordById('task_state', args.id)
+  },
   project: (args) => {
     console.log('pr', args)
     return db.getRecordById('project', args.id)

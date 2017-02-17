@@ -8,6 +8,7 @@ const schema = buildSchema(/* GraphQL */`
     project(id: Int): Project
     projects: [Project]
     tasks: [Task]
+    task(id: Int): Task
     taskStates: [TaskState]
   }
   type Schema {
@@ -56,6 +57,10 @@ const resolvers = {
         state: resolvers.taskState({ id: i.state_id }),
       })
     })
+  },
+  task: (args) => {
+    console.log('pr', args)
+    return db.getRecordById('task', args.id)
   },
   taskStates: () => db.getRecords('task_state'),
   taskState: (args) => {
